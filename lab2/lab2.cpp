@@ -1,6 +1,9 @@
 ﻿#include <iostream>
 #include <stdio.h>
 #include <conio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 void task1() {
 	printf("char - %d\n",sizeof(char));
@@ -145,10 +148,171 @@ void task11() {
 		else
 			sum += 1.0 / ((2 * n) + 1);
 	}
-	printf("%Lf\n", sum);
+	printf("%Lf\n", 4*sum);
+}
+
+void task12() {
+	float a, b, c, p;
+	printf("Podaj dlugosci trojkata\n");
+	scanf(" %f %f %f", &a, &b, &c);
+	if (a + b > c && b + c > a && a + c > b) {
+		printf("Mozna zbudowac trojkat\n");
+		p = (a + b + c) / 2;
+		printf("Jego pole wynosi %.2f", sqrt( p*(p - a)*(p - b)*(p - c) ) );
+	}
+	else {
+		printf("Nie mozna zbudowac trojkata\n");
+	}
+}
+
+void task13() {
+	printf("Podaj miare kata w radianach\n");
+	float radian,st;
+	scanf(" %f", &radian);
+	st = radian * (180 / 3.1415);
+	printf("Stopnie: %f", st);
+}
+
+void task14() {
+	printf("Podaj napis\n");
+	char string[30];
+	scanf(" %[^\n]s\n", string);
+	
+	int i = 0;
+	while (i<30) {
+		if (string[i] > 64 && string[i] < 91)
+			string[i] += 32;
+		else if (string[i] > 96 && string[i] < 123)
+			string[i] -= 32;
+		i++;
+	}
+	printf("%s", string);
+}
+
+void task15() {
+	printf("Podaj slowo\n");
+	char slowo[20];
+	scanf(" %s", slowo);
+	int x = 1;
+	for (int i = 0;i < strlen(slowo) / 2;i++) {
+		if (slowo[i] != slowo[strlen(slowo) - 1 - i])
+			x = 0;
+	}
+	if (x==1 && strlen(slowo) % 2 == 0) {
+		for (int i = 0;i < strlen(slowo) / 2;i++) {
+			printf("%c", slowo[i]);
+		}
+	}
+	else if(x==1 && strlen(slowo) % 2 == 1){
+		for (int i = 0;i < (strlen(slowo) / 2 )+1;i++) {
+			printf("%c ", slowo[i]);
+		}
+	}
+	
+}
+
+int isTriangleTrojkat(float a, float b, float c) {
+	if (a + b > c && b + c > a && a + c > b)
+		return 1;
+	else return 0;
+}
+
+float calculateArea(float a, float b, float c) {
+	float p;
+	p = (a + b + c) / 2;
+	return sqrt(p * (p - a) * (p - b) * (p - c));
+}
+
+void task16() {
+	printf("Podaj dlugosci bokow trojkata\n");
+	float a, b, c;
+	scanf(" %f%f%f", &a, &b, &c);
+	if (isTriangleTrojkat(a, b, c))
+		printf("Pole trojkata wynosi: %f\n", calculateArea(a, b, c));
+	else
+		printf("Nie mozesz zbudowac trojaka z tych bokow");
+}
+
+float toDegree(float rad) {
+	return rad * (180 / 3.1415);
+}
+
+void task17() {
+	printf("Podaj w radianach miare kata\n");
+	float rad;
+	scanf(" %f", &rad);
+	printf("%f",toDegree(rad));
+}
+
+int isPalindrome(char slowo[]) {
+	int x = 1;
+	for (int i = 0;i < strlen(slowo) / 2;i++) {
+		if (slowo[i] != slowo[strlen(slowo) - 1 - i])
+			x = 0;
+	}
+	return x;
+}
+
+void halfPalindrome(char slowo[]) {
+	if (strlen(slowo) % 2 == 0) {
+		for (int i = 0;i < strlen(slowo) / 2;i++) {
+			printf("%c", slowo[i]);
+		}
+	}
+	else
+		for (int i = 0;i < (strlen(slowo) / 2) + 1;i++) {
+			printf("%c", slowo[i]);
+		}
+	
+}
+
+void task18() {
+	printf("Podaj slowo\n");
+	char slowo[20];
+	scanf(" %s", slowo);
+	if (isPalindrome(slowo))
+		halfPalindrome(slowo);
+}
+
+int iterativeFibb(int n) {
+	int x0 = 0;
+	int x1 = 1;
+
+	for (int i = 0; i < n; ++i) {
+		int temp = x0 + x1;
+		x0 = x1;
+		x1 = temp;
+	}
+
+	return x0;
+}
+
+int recursiveFibb(int n) {
+	if (n == 0)
+		return 0;
+	else if (n == 0 || n == 1)
+		return 1;
+	else
+		return recursiveFibb(n - 1) + recursiveFibb(n - 2);
 }
 
 
+void task19() {
+	int n;
+	printf("Podaj n\n");
+	scanf(" %d", &n);
+
+	clock_t t = clock();
+	printf("iteracyjnie - %d\n", iterativeFibb(n));
+	t = clock() - t;
+	printf("Czas to %f\n", ((float)t) / CLOCKS_PER_SEC);
+
+	clock_t t = clock();
+	printf("relkurencyjnie - %d\n", recursiveFibb(n));
+	t = clock() - t;
+	printf("Czas to %f\n", ((float)t) / CLOCKS_PER_SEC);
+
+}
 
 int main()
 {
@@ -197,6 +361,38 @@ int main()
 
 		case 11:
 			task11();
+			break;
+
+		case 12:
+			task12();
+			break;
+
+		case 13:
+			task13();
+			break;
+
+		case 14:
+			task14();
+			break;
+
+		case 15:
+			task15();
+			break;
+
+		case 16:
+			task16();
+			break;
+
+		case 17:
+			task17();
+			break;
+
+		case 18:
+			task18();
+			break;
+
+		case 19:
+			task19();
 			break;
 
 		}
