@@ -1,7 +1,100 @@
 #include "pch.h"
 #include <iostream>
+#include <stdio.h>
+
+struct Student {
+	char imie[20];
+	char nazwisko[30];
+	int nr_indeksu;
+	char kierunek[30];
+	int rok_studiow;
+	int nr_gr_dziekanskiej;
+}Ja;
+
+void task1() {
+	printf("Podaj imie\n");
+	scanf(" %s", Ja.imie);
+
+	printf("Podaj nazwisko\n");
+	scanf(" %s", Ja.nazwisko);
+
+	printf("Podaj nr indeksu\n");
+	scanf(" %d", &Ja.nr_indeksu);
+
+	printf("Podaj kierunek\n");
+	scanf(" %s", Ja.kierunek);
+
+	printf("Podaj rok_studiow\n");
+	scanf(" %d", &Ja.rok_studiow);
+
+	printf("Podaj nr_gr_dziekanskiej\n");
+	scanf(" %d", &Ja.nr_gr_dziekanskiej);
+
+	printf(" %s %s %d %s %d %d",Ja.imie,Ja.nazwisko,Ja.nr_indeksu,Ja.kierunek,Ja.rok_studiow,Ja.nr_gr_dziekanskiej);
+
+	
+}
+
+void task2() {
+	Student ft_INF_8[15];
+	for (int i = 0; i < 4; i++) {
+		printf("Podaj imie\n");
+		scanf(" %s",ft_INF_8[0].imie);
+
+		printf("Podaj nazwisko\n");
+		scanf(" %s", ft_INF_8[0].nazwisko);
+
+		printf("Podaj nr indeksu\n");
+		scanf(" %d", &ft_INF_8[0].nr_indeksu);
+
+		printf("Podaj kierunek\n");
+		scanf(" %s", ft_INF_8[0].kierunek);
+
+		printf("Podaj rok_studiow\n");
+		scanf(" %d", &ft_INF_8[0].rok_studiow);
+
+		printf("Podaj nr_gr_dziekanskiej\n");
+		scanf(" %d", &ft_INF_8[0].nr_gr_dziekanskiej);
+	}
+	Student temp;
+	for (int i = 0; i < 15; i++) {
+		if (ft_INF_8[i].imie) {
+			for (int j = i + 1; j < 15; j++) {
+				if (ft_INF_8[i] > ft_INF_8[j]) {
+					temp = ft_INF_8[j];
+					ft_INF_8[j] = ft_INF_8[i];
+					ft_INF_8[i] = temp;
+				}
+			}
+		}
+	}
+	for (int i = 0; i < 15; i++) {
+		if (ft_INF_8[i].imie) {
+			printf("Imie: %s\n", ft_INF_8[i].imie);
+			printf("Nazwisko: %s\n", ft_INF_8[i].nazwisko);
+			printf("nr_indeksu: %d\n", ft_INF_8[i].nr_indeksu);
+			printf("kierunek: %s\n", ft_INF_8[i].kierunek);
+			printf("rok_studiow: %d\n", ft_INF_8[i].rok_studiow);
+			printf("nr_gr_dziekanskiej: %d\n", ft_INF_8[i].nr_gr_dziekanskiej);
+		}
+	}
+
+}
 
 int main()
 {
-    std::cout << "Hello World!\n"; 
+	int w;
+	printf("Podaj numer zadania\n");
+	scanf(" %d", &w);
+	switch (w) {
+	case 1:
+		task1();
+		break;
+	case 2:
+		task2();
+		break;
+	}
+	
+	
+
 }
