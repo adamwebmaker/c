@@ -1,0 +1,274 @@
+#include <iostream>
+#include <stdio.h>
+#include <string.h>
+
+
+void changeText(char *string) {
+	int i = 0;
+	while (i < 30) {
+		if (string[i] > 64 && string[i] < 91)
+			string[i] += 32;
+		else if (string[i] > 96 && string[i] < 123)
+			string[i] -= 32;
+		i++;
+	}
+
+}
+
+void task1() {
+	printf("Podaj napis\n");
+	char string[30];
+	scanf(" %[^\n]s\n", string);
+
+	changeText(string);
+
+	printf("%s", string);
+}
+
+int isTriangleTrojkat(float a, float b, float c) {
+	if (a + b > c && b + c > a && a + c > b)
+		return 1;
+	else return 0;
+}
+
+float calculateArea(float a, float b, float c) {
+	float p;
+	p = (a + b + c) / 2;
+	return sqrt(p * (p - a) * (p - b) * (p - c));
+}
+
+void task2() {
+	printf("Podaj dlugosci bokow trojkata\n");
+	float a, b, c;
+	scanf(" %f%f%f", &a, &b, &c);
+
+	if (isTriangleTrojkat(a, b, c))
+		printf("Pole trojkata wynosi: %f\n", calculateArea(a, b, c));
+	else
+		printf("Nie mozesz zbudowac trojaka z tych bokow");
+}
+
+float toDegree(float rad) {
+	return (rad * (180 / 3.1415));
+}
+
+void task3() {
+	printf("Podaj w radianach miare kata\n");
+	float rad;
+	scanf(" %f", &rad);
+	printf("%f", toDegree(rad));
+}
+
+int isPalindrome(char slowo[]) {
+	int x = 1;
+	for (int i = 0; i < strlen(slowo) / 2; i++) {
+		if (slowo[i] != slowo[strlen(slowo) - 1 - i])
+			x = 0;
+	}
+	return x;
+}
+
+void halfPalindrome(char slowo[]) {
+	if (strlen(slowo) % 2 == 0) {
+		for (int i = 0; i < strlen(slowo) / 2; i++) {
+			printf("%c", slowo[i]);
+		}
+	}
+	else
+		for (int i = 0; i < (strlen(slowo) / 2) + 1; i++) {
+			printf("%c", slowo[i]);
+		}
+
+}
+
+void task4() {
+	printf("Podaj slowo\n");
+	char slowo[20];
+	scanf(" %s", slowo);
+	if (isPalindrome(slowo))
+		halfPalindrome(slowo);
+}
+
+void insert_intoVector(int hist[][2], char letter) {
+	if (letter > 64 && letter < 91) {
+		hist[letter - 65][1]++;
+		//printf("%c %d\n", hist[letter - 65][0], hist[letter - 65][1]);
+	}
+	if (letter > 96 && letter < 123) {
+		hist[letter - 71][1]++;
+		//printf("%c %d\n", hist[letter - 71][0], hist[letter - 71][1]);
+	}
+}
+
+void sortVector(int hist[][2]) {
+
+	for (int i = 0; i < 52; i++) {
+		for (int j = 0; j < 52 - 1 - i; j++) {
+			if (hist[j + 1][1] < hist[j][1]) {
+				int temp[1][1];
+				temp[0][0]=hist[j + 1][1];
+				hist[j + 1][1] = hist[j][1];
+				hist[j][1] = temp[0][0];
+
+				temp[0][0] = hist[j + 1][0];
+				hist[j + 1][0] = hist[j][0];
+				hist[j][0] = temp[0][0];
+			}
+		}
+	}
+
+}
+
+void printVector(int hist[][2]) {
+	for (int i = 51; i >=0; i--) {
+		printf("%c %d\n", hist[i][0], hist[i][1]);
+	}
+}
+
+void task5() {
+	char ciag[127];
+	printf("Podaj ciag znakow\n");
+	scanf(" %[^\n]s", ciag);
+	//printf("%s", ciag);
+	int hist[52][2];
+
+	for (int i = 0; i < 26; i++) {
+		hist[i][0] = i + 65;
+		hist[i][1] = 0;
+		//printf("%c %d\n", hist[i][0], hist[i][1]);
+	}
+	int j = 97;
+	for (int i = 26; i < 52; i++) {
+		hist[i][0] = j;
+		hist[i][1] = 0;
+		//printf("%c %d\n", hist[i][0], hist[i][1]);
+		j++;
+	}
+
+	for (int i = 0; i < strlen(ciag); i++) {
+		insert_intoVector(hist, ciag[i]);
+	}
+
+	int wybor;
+	printf("Wybierz po czym chcesz sortowac:\n");
+	printf("0 - wedlug liter alfabetu\n");
+	printf("1 - wedlug czestotliwosci wystepowania litery\n");
+	scanf("%d", &wybor);
+	if (wybor == 1) {
+		sortVector(hist);
+	}
+
+	printVector(hist);
+}
+
+unsigned int** generateVector(int size1, int size2) {
+	unsigned int** array2D;
+
+	array2D = (unsigned int**)malloc(size1 * sizeof(unsigned int*));
+
+	for (int i = 0;i < size1;i++) {
+		array2D[i] = (unsigned int*)malloc(size2 * sizeof(unsigned int));
+	}
+
+	return array2D;
+}
+
+void showVector(unsigned int** tab, int size1, int size2) {
+	/*
+	for (int i = 0;i < size1;i++) {
+		for (int j = 0;j < size2;j++) {
+			tab[i][j] = i * j;
+		}
+	}
+	*/
+
+	for (int i = 0;i < size1;i++) {
+		for (int j = 0;j < size2;j++) {
+			printf("%d\t", tab[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+
+void insert_intoVector(unsigned int **tab) {
+	printf("Podaj liczy do tablicy, wpisz 0 jesli chcesz skonczyc\n");
+	int num;
+	scanf("%d", &num);
+	while (num != 0) {
+		
+		unsigned low3bits = num & 0x7;
+		//printf("%d ", low3bits);
+		//int columns = sizeof(tab[low3bits]) / sizeof(tab[low3bits][0]);
+		printf("\n%d\n", (sizeof(tab[low3bits]) / sizeof(unsigned int)));
+		//printf("\n%d\n", sizeof(tab[low3bits][0]));
+		//printf("\n%d\n", columns);
+		*(*(tab + low3bits) + (sizeof(tab[low3bits])/sizeof(unsigned int)) ) = num;
+		//printf("%d", columns);
+
+		scanf("%d", &num);
+	}
+}
+
+
+void freeVector(unsigned int **tab,int size1) {
+	for (int i = 0;i < size1;i++) {
+		free(tab[i]);
+	}
+	free(tab);
+}
+
+void task6() {
+	int size1,size2;
+	unsigned int** tab;
+	//printf("Podaj wymiary tablicy\n");
+	//scanf("%d%d", &size1, &size2);
+	size1 = 8;
+	size2 = 100;
+	tab = generateVector(size1, size2);
+
+	
+	insert_intoVector(tab);
+	showVector(tab, size1, size2);
+
+	freeVector(tab,size1);
+}
+
+int main()
+{
+	int x = 1;
+	do {
+		int number;
+		printf("Podaj numer zadania\n");
+		scanf("%d", &number);
+		switch (number) {
+		case 1:
+			task1();
+			break;
+
+		case 2:
+			task2();
+			break;
+
+		case 3:
+			task3();
+			break;
+
+		case 4:
+			task4();
+			break;
+
+		case 5:
+			task5();
+			break;
+
+		case 6:
+			task6();
+			break;
+
+		}
+		printf("\n0 - aby zakonczyc\n");
+		printf("1 - ponowne uruchomienie\n");
+		scanf("%d", &x);
+	} while (x);
+}
