@@ -3,6 +3,7 @@
 #include <string.h>
 #include <malloc.h>
 
+int tab_i[8] = { 0 };
 
 void changeText(char *string) {
 	int i = 0;
@@ -186,15 +187,35 @@ void showVector(unsigned int** tab, int size1) {
 	for (int i = 0;i < size1;i++) {
 		int j = 0;
 		printf("wiersz nr %d:\t", i);
-		
-		while(tab[i][j]!=NULL) {
+		/*
+		while(tab[i][j]) {
 			printf("%d\t", tab[i][j]);
 			j++;
 		}
-		/*
-		for (int j = 0;j < 100;j++) {
+		*/
+		for (int j = 0;j < tab_i[i];j++) {
 			printf("%d\t", tab[i][j]);
-		}*/
+		}
+		printf("\n\n");
+	}
+}
+
+void bin(int n) {
+	if (n > 1)
+		bin(n / 2);
+
+	printf("%d", n % 2);
+}
+
+void showVectorBin(unsigned int** tab, int size1) {
+
+	for (int i = 0;i < size1;i++) {
+		int j = 0;
+		printf("wiersz nr %d:\t", i);
+		for (int j = 0;j < tab_i[i];j++) {
+			bin(tab[i][j]);
+			printf(" ");
+		}
 		printf("\n\n");
 	}
 }
@@ -207,7 +228,7 @@ int h_bit(int num) {
 
 void insert_intoVector(unsigned int **tab) {
 	printf("Podaj liczy do tablicy, wpisz 0 jesli chcesz skonczyc\n");
-	int num, indx, i[8] = { 0 };
+	int num, indx;
 	scanf("%d", &num);
 	while (num != 0) {
 		
@@ -215,10 +236,11 @@ void insert_intoVector(unsigned int **tab) {
 		//printf("\n%d\n", sizeof(tab[low3bits]) / sizeof(tab[low3bits][0]));
 		//printf("\n%d\n", sizeof(tab[low3bits]));
 		//*(*(tab + low3bits) + sizeof(tab[low3bits]) / sizeof(tab[low3bits][0])) = num;
-		indx = h_bit(num);
 		//*(*(tab + indx) + sizeof(tab[indx]) / sizeof(tab[indx][0])) = num;
 
-		*(*(tab + indx) + i[indx]++) = num;
+		indx = h_bit(num);
+
+		*(*(tab + indx) + tab_i[indx]++) = num;
 
 		scanf("\n%d", &num);
 	}
@@ -228,22 +250,20 @@ void insert_intoVector(unsigned int **tab) {
 
 unsigned int** reduceVector(unsigned int** tab) {
 	for (int i = 0;i < 8;i++) {
-		int j = 0;
-		while (tab[i][j] != 0) {
-			j++;
-		}
-		tab = (unsigned int**)realloc(tab, sizeof(unsigned int*) * 8);
-		for (int y = 0; y < (j+1); y++) {
-			tab[y] = (unsigned int*)realloc(tab[y], sizeof(unsigned int) * (j+1));
-			if (tab[y] == NULL) {
-				// TODO: handle memory allocation fail error
-				exit(1);
-			}
-		}
+		tab[i] = (unsigned int*)realloc(tab[i], sizeof(unsigned int) * tab_i[i]);
 	}
+
+	return tab;
 }
 
+int tab_size(unsigned int** tab) {
+	int size = 0;
+	for (int i = 0;i < 8;i++) {
+		size += tab_i[i];
+	}
 
+	return size;
+}
 
 void freeVector(unsigned int **tab,int size1) {
 	for (int i = 0;i < size1;i++) {
@@ -268,35 +288,72 @@ void task6() {
 	
 	insert_intoVector(tab);
 
-	
+	printf("\nrozmiar tablicy przed zmniejszeniem - %d\n", size1*size2);
+
+	tab = reduceVector(tab);
+
+	printf("rozmiar tablicy po zmniejszeniu - %d\n", tab_size(tab));
+
+	printf("rozmiar tablicy po zmniejszeniu - %d\n", tab_size(tab));
 
 	showVector(tab, size1);
 
-	printf("rozmiar tablicy przed zmniejszeniem - %d\n", _msize(tab));
-
-	//tab = reduceVector(tab);
-
-	/*
-	for (int i = 0; i < size1; i++) {
-
-		int j = 0;
-		while (tab[i][j] != 0) {
-			j++;
-		}
-		unsigned int* tmp = (unsigned int*)realloc(tab[i], sizeof(*tab[i]) * j);
-		if (tmp)
-			tab[i] = tmp;
-	}
-
-	showVector(tab, size1);
-	*/
-	printf("rozmiar tablicy po zmniejszeniem - %d\n", _msize(tab));
+	showVectorBin(tab, size1);
 
 	freeVector(tab,size1);
 }
 
+unsigned int** generateVector_7(int size1, int size2) {
+	unsigned int** array2D;
+
+	array2D = new unsigned int*[size1];
+
+	for (int i = 0;i < size1;i++) {
+		array2D[i] = new unsigned int[size2];
+	}
+
+	return array2D;
+}
+
+void freeVector_7(unsigned int** tab, int size1) {
+	for (int i = 0;i < size1;i++) {
+		delete[] tab[i];
+	}
+	delete[] tab;
+}
+
+void task7() {
+	int size1, size2;
+	unsigned int** tab;
+	//printf("Podaj wymiary tablicy\n");
+	//scanf("%d%d", &size1, &size2);
+	size1 = 8;
+	size2 = 100;
+	tab = generateVector_7(size1, size2);
+
+	for (int i = 0;i < size1;i++) {
+		for (int j = 0;j < size2;j++)
+			tab[i][j] = 0;
+	}
+
+	insert_intoVector(tab);
+
+	printf("\nrozmiar tablicy przed zmniejszeniem - %d\n", size1 * size2);
+
+	tab = reduceVector(tab);
+
+	printf("rozmiar tablicy po zmniejszeniu - %d\n", tab_size(tab));
+
+
+	showVector(tab, size1);
+
+	showVectorBin(tab, size1);
+
+	freeVector_7(tab, size1);
+}
+
 int letterInFirst(const char* word1, char first_word2) {
-	
+
 	for (int i = 0;i < strlen(word1);i++) {
 		if (word1[i] == first_word2)
 			return i;
@@ -322,8 +379,7 @@ void zero(char word1[], int i) {
 }
 
 
-
-void task7() {
+void task8() {
 	char word1[64],word2[64];
 	printf("Podaj dwa lancuchy znakow\n");
 	scanf("%s", word1);
@@ -396,6 +452,10 @@ int main()
 
 		case 7:
 			task7();
+			break;
+
+		case 8:
+			task8();
 			break;
 
 		}
